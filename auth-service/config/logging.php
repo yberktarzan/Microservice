@@ -1,5 +1,8 @@
 <?php
 
+use Elastic\Elasticsearch\ClientBuilder;
+use Monolog\Formatter\ElasticsearchFormatter;
+use Monolog\Handler\ElasticsearchHandler;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -125,6 +128,20 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+
+        'elasticsearch' => [
+            'driver' => 'monolog',
+            'handler' => ElasticsearchHandler::class,
+            'with' => [
+                'client' => ClientBuilder::create()
+                    ->setHosts([env('ELASTICSEARCH_HOST', 'http://localhost:9200')])
+                    ->build(),
+                'options' => [
+                    'index' => 'auth-service-logs',
+                ],
+            ],
+            'formatter' => ElasticsearchFormatter::class,
         ],
 
     ],
