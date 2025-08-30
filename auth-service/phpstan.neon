@@ -1,0 +1,22 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+        - config/
+        - database/
+        - routes/
+    
+    level: 8
+    
+    ignoreErrors:
+        - '#PHPDoc tag @var#'
+    
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    
+    excludePaths:
+        - bootstrap/cache/*
+        - storage/*
+        - vendor/*
