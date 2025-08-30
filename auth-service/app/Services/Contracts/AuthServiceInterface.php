@@ -17,7 +17,7 @@ interface AuthServiceInterface
     /**
      * Register a new user.
      *
-     * @param array<string, mixed> $data Registration data
+     * @param  array<string, mixed>  $data  Registration data
      * @return array<string, mixed> User and token data
      */
     public function register(array $data): array;
@@ -25,9 +25,10 @@ interface AuthServiceInterface
     /**
      * Login user with email and password.
      *
-     * @param string $email User email
-     * @param string $password User password
+     * @param  string  $email  User email
+     * @param  string  $password  User password
      * @return array<string, mixed> User and token data
+     *
      * @throws \App\Exceptions\Auth\InvalidCredentialsException
      */
     public function login(string $email, string $password): array;
@@ -35,15 +36,14 @@ interface AuthServiceInterface
     /**
      * Logout user and revoke current token.
      *
-     * @param User $user Authenticated user
-     * @return void
+     * @param  User  $user  Authenticated user
      */
     public function logout(User $user): void;
 
     /**
      * Refresh user authentication token.
      *
-     * @param User $user Authenticated user
+     * @param  User  $user  Authenticated user
      * @return array<string, mixed> User and new token data
      */
     public function refreshToken(User $user): array;
@@ -51,8 +51,8 @@ interface AuthServiceInterface
     /**
      * Send password reset link to user email.
      *
-     * @param string $email User email
-     * @return void
+     * @param  string  $email  User email
+     *
      * @throws \Exception When email sending fails
      */
     public function sendPasswordResetLink(string $email): void;
@@ -60,8 +60,8 @@ interface AuthServiceInterface
     /**
      * Reset user password using reset token.
      *
-     * @param array<string, mixed> $data Password reset data (token, email, password, password_confirmation)
-     * @return void
+     * @param  array<string, mixed>  $data  Password reset data (token, email, password, password_confirmation)
+     *
      * @throws \Exception When reset fails
      */
     public function resetPassword(array $data): void;
@@ -69,9 +69,10 @@ interface AuthServiceInterface
     /**
      * Verify user email address.
      *
-     * @param int $userId User ID
-     * @param string $hash Verification hash
+     * @param  int  $userId  User ID
+     * @param  string  $hash  Verification hash
      * @return array<string, mixed> Verification result
+     *
      * @throws \Exception When verification fails
      */
     public function verifyEmail(int $userId, string $hash): array;
@@ -79,8 +80,9 @@ interface AuthServiceInterface
     /**
      * Resend email verification notification.
      *
-     * @param User $user Authenticated user
+     * @param  User  $user  Authenticated user
      * @return array<string, mixed> Resend result
+     *
      * @throws \Exception When sending fails
      */
     public function resendEmailVerification(User $user): array;

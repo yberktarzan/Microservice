@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,18 +15,40 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:sanctum');
-    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-    Route::post('/verify-email', [AuthController::class, 'verifyEmail']);
-    Route::post('/resend-verification', [AuthController::class, 'resendVerification'])->middleware('auth:sanctum');
+// Health check endpoint
+Route::get('/health', function () {
+    return response()->json([
+        'service' => 'Auth Service',
+        'status' => 'healthy',
+        'timestamp' => now()->toISOString(),
+    ]);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Authentication routes with locale middleware
+Route::middleware(['locale'])->group(function () {
+
+    // Public auth routes (no authentication required)
+    Route::controller(AuthController::class)->prefix('auth')->group(function () {
+        Route::post('/register', 'register');
+        Route::post('/login', 'login');
+        Route::post('/forgot-password', 'forgotPassword');
+        Route::post('/reset-password', 'resetPassword');
+        Route::post('/verify-email', 'verifyEmail')->name('verification.verify');
+    });
+
+    // Protected auth routes (authentication required)
+    Route::middleware('auth:sanctum')->controller(AuthController::class)->prefix('auth')->group(function () {
+        Route::post('/logout', 'logout');
+        Route::post('/refresh', 'refresh');
+        Route::get('/me', 'me');
+        Route::post('/resend-verification', 'resendVerification');
+    });
+
+    // Legacy user endpoint (for backward compatibility)
+    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'data' => ['user' => $request->user()],
+        ]);
+    });
 });

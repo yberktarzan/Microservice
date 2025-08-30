@@ -18,7 +18,7 @@ interface AuthServiceInterface
     /**
      * Register a new user.
      *
-     * @param array<string, mixed> $data Registration data
+     * @param  array<string, mixed>  $data  Registration data
      * @return JsonResponse Registration response
      */
     public function register(array $data): JsonResponse;
@@ -26,7 +26,7 @@ interface AuthServiceInterface
     /**
      * Authenticate user login.
      *
-     * @param array<string, mixed> $credentials Login credentials
+     * @param  array<string, mixed>  $credentials  Login credentials
      * @return JsonResponse Login response
      */
     public function login(array $credentials): JsonResponse;
@@ -34,7 +34,7 @@ interface AuthServiceInterface
     /**
      * Logout authenticated user.
      *
-     * @param User $user Authenticated user
+     * @param  User  $user  Authenticated user
      * @return JsonResponse Logout response
      */
     public function logout(User $user): JsonResponse;
@@ -42,7 +42,7 @@ interface AuthServiceInterface
     /**
      * Refresh user authentication token.
      *
-     * @param User $user Authenticated user
+     * @param  User  $user  Authenticated user
      * @return JsonResponse Token refresh response
      */
     public function refreshToken(User $user): JsonResponse;
@@ -50,7 +50,7 @@ interface AuthServiceInterface
     /**
      * Get authenticated user information.
      *
-     * @param User $user Authenticated user
+     * @param  User  $user  Authenticated user
      * @return JsonResponse User information response
      */
     public function getAuthenticatedUser(User $user): JsonResponse;
@@ -58,7 +58,7 @@ interface AuthServiceInterface
     /**
      * Send password reset link.
      *
-     * @param string $email User email
+     * @param  string  $email  User email
      * @return JsonResponse Password reset response
      */
     public function sendPasswordResetLink(string $email): JsonResponse;
@@ -66,7 +66,7 @@ interface AuthServiceInterface
     /**
      * Reset user password.
      *
-     * @param array<string, mixed> $data Reset password data
+     * @param  array<string, mixed>  $data  Reset password data
      * @return JsonResponse Password reset response
      */
     public function resetPassword(array $data): JsonResponse;
@@ -74,8 +74,8 @@ interface AuthServiceInterface
     /**
      * Verify user email.
      *
-     * @param int $id User ID
-     * @param string $hash Verification hash
+     * @param  int  $id  User ID
+     * @param  string  $hash  Verification hash
      * @return JsonResponse Email verification response
      */
     public function verifyEmail(int $id, string $hash): JsonResponse;
@@ -83,7 +83,7 @@ interface AuthServiceInterface
     /**
      * Resend email verification notification.
      *
-     * @param User $user User to send verification
+     * @param  User  $user  User to send verification
      * @return JsonResponse Verification resend response
      */
     public function resendEmailVerification(User $user): JsonResponse;

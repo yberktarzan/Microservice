@@ -8,18 +8,18 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Invalid credentials exception.
+ * User already exists exception.
  *
- * Thrown when user provides invalid login credentials.
+ * Thrown when attempting to register a user that already exists.
  */
-class InvalidCredentialsException extends AuthException
+class UserAlreadyExistsException extends AuthException
 {
     /**
-     * Create a new invalid credentials exception instance.
+     * Create a new user already exists exception instance.
      */
     public function __construct()
     {
-        parent::__construct(__('auth.login_failed'), Response::HTTP_UNAUTHORIZED);
+        parent::__construct(__('auth.user_already_exists'), Response::HTTP_CONFLICT);
     }
 
     /**
@@ -30,7 +30,7 @@ class InvalidCredentialsException extends AuthException
         return response()->json([
             'success' => false,
             'message' => $this->getMessage(),
-            'error_code' => 'INVALID_CREDENTIALS',
+            'error_code' => 'USER_EXISTS',
         ], $this->getCode());
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Core\Traits\ApiResponse;
+use App\Traits\ApiResponse;
 
 /**
  * Base controller class for Auth microservice.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Traits;
+namespace App\Traits;
 
 use App\Services\Logging\ApiResponseLogger;
 use Illuminate\Http\JsonResponse;

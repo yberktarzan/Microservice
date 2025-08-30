@@ -19,7 +19,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Find user by ID.
      *
-     * @param int $id User ID
+     * @param  int  $id  User ID
      * @return User|null User model or null if not found
      */
     public function findById(int $id): ?User
@@ -30,7 +30,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Find user by email address.
      *
-     * @param string $email Email address
+     * @param  string  $email  Email address
      * @return User|null User model or null if not found
      */
     public function findByEmail(string $email): ?User
@@ -41,7 +41,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Create a new user during registration.
      *
-     * @param array<string, mixed> $data User registration data
+     * @param  array<string, mixed>  $data  User registration data
      * @return User Created user model
      */
     public function create(array $data): User
@@ -56,19 +56,56 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Update user profile data.
      *
-     * @param int $id User ID
-     * @param array<string, mixed> $data Updated profile data
+     * @param  int  $id  User ID
+     * @param  array<string, mixed>  $data  Updated profile data
      * @return bool Update success status
      */
     public function update(int $id, array $data): bool
     {
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
         return User::where('id', $id)->update($data);
+    }
+
+    /**
+     * Delete user.
+     *
+     * @param  User  $user  User model
+     * @return bool Deletion success
+     */
+    public function delete(User $user): bool
+    {
+        return $user->delete();
+    }
+
+    /**
+     * Find user by verification token.
+     *
+     * @param  string  $token  Verification token
+     * @return User|null User model or null if not found
+     */
+    public function findByVerificationToken(string $token): ?User
+    {
+        return User::where('email_verification_token', $token)->first();
+    }
+
+    /**
+     * Find user by reset token.
+     *
+     * @param  string  $token  Reset token
+     * @return User|null User model or null if not found
+     */
+    public function findByResetToken(string $token): ?User
+    {
+        return User::where('password_reset_token', $token)->first();
     }
 
     /**
      * Check if user exists by email.
      *
-     * @param string $email Email address
+     * @param  string  $email  Email address
      * @return bool Existence status
      */
     public function existsByEmail(string $email): bool
@@ -79,7 +116,7 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Mark email as verified.
      *
-     * @param int $id User ID
+     * @param  int  $id  User ID
      * @return bool Update success status
      */
     public function markEmailAsVerified(int $id): bool
@@ -92,8 +129,8 @@ final class UserRepository implements UserRepositoryInterface
     /**
      * Update user password.
      *
-     * @param int $id User ID
-     * @param string $hashedPassword Hashed password
+     * @param  int  $id  User ID
+     * @param  string  $hashedPassword  Hashed password
      * @return bool Update success status
      */
     public function updatePassword(int $id, string $hashedPassword): bool
