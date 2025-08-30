@@ -66,7 +66,7 @@ final class UserRepository implements UserRepositoryInterface
             $data['password'] = Hash::make($data['password']);
         }
 
-        return User::where('id', $id)->update($data);
+        return User::where('id', $id)->update($data) > 0;
     }
 
 
@@ -92,7 +92,7 @@ final class UserRepository implements UserRepositoryInterface
     {
         return User::where('id', $id)->update([
             'email_verified_at' => now(),
-        ]);
+        ]) > 0;
     }
 
     /**
@@ -106,6 +106,6 @@ final class UserRepository implements UserRepositoryInterface
     {
         return User::where('id', $id)->update([
             'password' => $hashedPassword,
-        ]);
+        ]) > 0;
     }
 }

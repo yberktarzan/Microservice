@@ -40,7 +40,9 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->authService->register($request->validated());
+        /** @var array{name: string, email: string, password: string} $validatedData */
+        $validatedData = $request->validated();
+        $result = $this->authService->register($validatedData);
 
         return $this->successResponse(
             data: new AuthResource($result),
@@ -54,7 +56,7 @@ class AuthController extends Controller
      * @param  LoginRequest  $request  Validated login request
      * @return JsonResponse Login response with user data and token
      *
-     * @throws InvalidCredentialsException When credentials are invalid
+     * @throws \App\Exceptions\Auth\InvalidCredentialsException When credentials are invalid
      */
     public function login(LoginRequest $request): JsonResponse
     {
@@ -77,7 +79,10 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $this->authService->logout($request->user());
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        
+        $this->authService->logout($user);
 
         return $this->successResponse(
             message: __('auth.logout_successful')
@@ -92,7 +97,10 @@ class AuthController extends Controller
      */
     public function refresh(Request $request): JsonResponse
     {
-        $result = $this->authService->refreshToken($request->user());
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        
+        $result = $this->authService->refreshToken($user);
 
         return $this->successResponse(
             data: new AuthResource($result),
@@ -108,8 +116,11 @@ class AuthController extends Controller
      */
     public function me(Request $request): JsonResponse
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        
         return $this->successResponse(
-            data: new UserResource($request->user())
+            data: new UserResource($user)
         );
     }
 
@@ -136,7 +147,9 @@ class AuthController extends Controller
      */
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
-        $this->authService->resetPassword($request->validated());
+        /** @var array{token: string, email: string, password: string, password_confirmation: string} $validatedData */
+        $validatedData = $request->validated();
+        $this->authService->resetPassword($validatedData);
 
         return $this->successResponse(
             message: __('auth.password_reset_successful')
@@ -171,7 +184,10 @@ class AuthController extends Controller
      */
     public function resendVerification(Request $request): JsonResponse
     {
-        $result = $this->authService->resendEmailVerification($request->user());
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        
+        $result = $this->authService->resendEmailVerification($user);
 
         $message = $result['already_verified']
             ? __('auth.email_already_verified')

@@ -34,8 +34,8 @@ class AuthService implements AuthServiceInterface
     /**
      * Register a new user.
      *
-     * @param  array  $data  User registration data
-     * @return array User data with token
+     * @param  array{name: string, email: string, password: string}  $data  User registration data
+     * @return array{user: User, token: string} User data with token
      *
      * @throws UserAlreadyExistsException
      */
@@ -70,7 +70,7 @@ class AuthService implements AuthServiceInterface
      *
      * @param  string  $email  User email
      * @param  string  $password  User password
-     * @return array User data with token
+     * @return array{user: User, token: string} User data with token
      *
      * @throws InvalidCredentialsException|EmailNotVerifiedException
      */
@@ -109,7 +109,8 @@ class AuthService implements AuthServiceInterface
     /**
      * Refresh user token.
      *
-     * @return array New token data
+     * @param  User  $user  Authenticated user
+     * @return array{token: string} New token data
      */
     public function refreshToken(User $user): array
     {
@@ -143,7 +144,7 @@ class AuthService implements AuthServiceInterface
     /**
      * Reset password.
      *
-     * @param  array  $data  Password reset data
+     * @param  array{token: string, email: string, password: string, password_confirmation: string}  $data  Password reset data
      *
      * @throws ValidationException
      */
@@ -180,7 +181,7 @@ class AuthService implements AuthServiceInterface
      *
      * @param  int  $userId  User ID
      * @param  string  $hash  Verification hash
-     * @return array Verification result
+     * @return array{already_verified: bool} Verification result
      * 
      * @throws ValidationException
      */
@@ -213,7 +214,8 @@ class AuthService implements AuthServiceInterface
     /**
      * Resend email verification notification.
      *
-     * @return array Resend result
+     * @param  User  $user  Authenticated user
+     * @return array{already_verified: bool} Resend result
      */
     public function resendEmailVerification(User $user): array
     {

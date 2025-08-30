@@ -12,13 +12,14 @@ return [
     'registration_failed' => 'Kayıt başarısız. Lütfen tekrar deneyin.',
     'user_already_exists' => 'Bu e-posta adresi ile zaten bir kullanıcı kayıtlı.',
 
-    // Login messages
+        // Login messages
     'login_successful' => 'Giriş başarılı.',
     'login_failed' => 'Geçersiz kimlik bilgileri.',
-    'logout_successful' => 'Başarıyla çıkış yapıldı.',
+    'invalid_credentials' => 'Geçersiz kimlik bilgileri.',
+    'logout_successful' => 'Çıkış başarılı.',
 
     // Token messages
-    'token_refreshed' => 'Token başarıyla yenilendi.',
+    'token_refreshed' => 'Token yenilendi.',
     'token_invalid' => 'Geçersiz veya süresi dolmuş token.',
     'token_expired' => 'Token süresi dolmuş.',
 
@@ -26,7 +27,7 @@ return [
     'password_reset_sent' => 'Şifre sıfırlama bağlantısı e-postanıza gönderildi.',
     'password_reset_failed' => 'Şifre sıfırlama bağlantısı gönderilemedi.',
     'password_reset_successful' => 'Şifre başarıyla sıfırlandı.',
-    'password_reset_invalid' => 'Geçersiz şifre sıfırlama tokeni.',
+    'password_reset_invalid' => 'Geçersiz şifre sıfırlama token.',
 
     // Email verification
     'email_verified' => 'E-posta başarıyla doğrulandı.',
@@ -34,6 +35,7 @@ return [
     'email_verification_sent' => 'Doğrulama e-postası gönderildi.',
     'email_verification_failed' => 'Doğrulama e-postası gönderilemedi.',
     'email_verification_invalid' => 'Geçersiz doğrulama bağlantısı.',
+    'email_not_verified' => 'E-posta adresi doğrulanmamış.',
 
     // Account status
     'account_disabled' => 'Hesap devre dışı bırakılmış.',

@@ -3,20 +3,7 @@ includes:
 
 parameters:
     paths:
-        - app/
-        - config/
-        - database/
-        - routes/
+        - app
+        - routes
     
     level: 8
-    
-    ignoreErrors:
-        - '#PHPDoc tag @var#'
-    
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
-    
-    excludePaths:
-        - bootstrap/cache/*
-        - storage/*
-        - vendor/*

@@ -17,8 +17,8 @@ interface AuthServiceInterface
     /**
      * Register a new user.
      *
-     * @param  array<string, mixed>  $data  Registration data
-     * @return array<string, mixed> User and token data
+     * @param  array{name: string, email: string, password: string}  $data  Registration data
+     * @return array{user: User, token: string} User and token data
      */
     public function register(array $data): array;
 
@@ -27,7 +27,7 @@ interface AuthServiceInterface
      *
      * @param  string  $email  User email
      * @param  string  $password  User password
-     * @return array<string, mixed> User and token data
+     * @return array{user: User, token: string} User and token data
      *
      * @throws \App\Exceptions\Auth\InvalidCredentialsException
      */
@@ -44,7 +44,7 @@ interface AuthServiceInterface
      * Refresh user authentication token.
      *
      * @param  User  $user  Authenticated user
-     * @return array<string, mixed> User and new token data
+     * @return array{token: string} User and new token data
      */
     public function refreshToken(User $user): array;
 
@@ -60,7 +60,7 @@ interface AuthServiceInterface
     /**
      * Reset user password using reset token.
      *
-     * @param  array<string, mixed>  $data  Password reset data (token, email, password, password_confirmation)
+     * @param  array{token: string, email: string, password: string, password_confirmation: string}  $data  Password reset data (token, email, password, password_confirmation)
      *
      * @throws \Illuminate\Validation\ValidationException When reset fails
      */
@@ -71,7 +71,7 @@ interface AuthServiceInterface
      *
      * @param  int  $userId  User ID
      * @param  string  $hash  Verification hash
-     * @return array<string, mixed> Verification result
+     * @return array{already_verified: bool} Verification result
      *
      * @throws \Illuminate\Validation\ValidationException When verification fails
      */
@@ -81,7 +81,7 @@ interface AuthServiceInterface
      * Resend email verification notification.
      *
      * @param  User  $user  Authenticated user
-     * @return array<string, mixed> Resend result
+     * @return array{already_verified: bool} Resend result
      */
     public function resendEmailVerification(User $user): array;
 }
