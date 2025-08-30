@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Logging;
 
+use App\Services\Elasticsearch\ElasticsearchService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -13,9 +14,23 @@ use Illuminate\Support\Facades\Log;
  *
  * Handles different log levels based on HTTP status codes and provides
  * structured logging for monitoring and debugging purposes.
+ * Enhanced with Elasticsearch integration for better analytics.
  */
 class ApiResponseLogger
 {
+    private ElasticsearchService $elasticsearch;
+
+    private string $indexName;
+
+    public function __construct(ElasticsearchService $elasticsearch)
+    {
+        $this->elasticsearch = $elasticsearch;
+        $this->indexName = config('services.elasticsearch.api_index', 'auth-api-responses');
+
+        // Ensure index exists
+        $this->createApiResponsesIndex();
+    }
+
     /**
      * Log an API response with contextual information.
      *
@@ -31,11 +46,15 @@ class ApiResponseLogger
     {
         $context = $this->buildLogContext($responseData);
 
+        // Log to Laravel's default logger
         if ($responseData['success']) {
             $this->logSuccessResponse($context);
         } else {
             $this->logErrorResponse($responseData['status_code'], $context);
         }
+
+        // Log to Elasticsearch for analytics
+        $this->logToElasticsearch($context);
     }
 
     /**
@@ -77,16 +96,6 @@ class ApiResponseLogger
                 'endpoint' => $request->path(),
             ],
         ];
-
-        $authId = $request->header('authid');
-        $companyId = $request->header('company-id');
-
-        if ($authId || $companyId) {
-            $context['gateway'] = [
-                'auth_user_id' => $authId,
-                'company_id' => $companyId,
-            ];
-        }
 
         if (Auth::check()) {
             $user = Auth::user();
@@ -162,5 +171,75 @@ class ApiResponseLogger
             Response::HTTP_GATEWAY_TIMEOUT => 'API Gateway Timeout',
             default => "API Error Response (HTTP {$statusCode})",
         };
+    }
+
+    /**
+     * Log response data to Elasticsearch for analytics.
+     */
+    private function logToElasticsearch(array $context): void
+    {
+        // Add additional metadata for Elasticsearch
+        $elasticDocument = array_merge($context, [
+            'response_time' => $this->calculateResponseTime(),
+            'memory_usage' => memory_get_usage(true),
+            'peak_memory' => memory_get_peak_usage(true),
+        ]);
+
+        $this->elasticsearch->indexDocument($this->indexName, $elasticDocument);
+    }
+
+    /**
+     * Calculate response time if available.
+     */
+    private function calculateResponseTime(): ?float
+    {
+        if (defined('LARAVEL_START')) {
+            return round((microtime(true) - LARAVEL_START) * 1000, 2);
+        }
+
+        return null;
+    }
+
+    /**
+     * Create API responses index with proper mapping.
+     */
+    private function createApiResponsesIndex(): void
+    {
+        $mapping = [
+            'mappings' => [
+                'properties' => [
+                    '@timestamp' => ['type' => 'date'],
+                    'timestamp' => ['type' => 'date'],
+                    'success' => ['type' => 'boolean'],
+                    'status_code' => ['type' => 'short'],
+                    'message' => ['type' => 'text'],
+                    'service' => ['type' => 'keyword'],
+                    'environment' => ['type' => 'keyword'],
+                    'response_time' => ['type' => 'float'],
+                    'memory_usage' => ['type' => 'long'],
+                    'peak_memory' => ['type' => 'long'],
+                    'request' => [
+                        'properties' => [
+                            'method' => ['type' => 'keyword'],
+                            'url' => ['type' => 'text'],
+                            'ip' => ['type' => 'ip'],
+                            'user_agent' => ['type' => 'text'],
+                            'endpoint' => ['type' => 'keyword'],
+                        ],
+                    ],
+                    'user' => [
+                        'properties' => [
+                            'id' => ['type' => 'long'],
+                            'email' => ['type' => 'keyword'],
+                        ],
+                    ],
+                    'errors' => ['type' => 'object'],
+                    'data_type' => ['type' => 'keyword'],
+                    'data_count' => ['type' => 'long'],
+                ],
+            ],
+        ];
+
+        $this->elasticsearch->createIndexIfNotExists($this->indexName, $mapping);
     }
 }
