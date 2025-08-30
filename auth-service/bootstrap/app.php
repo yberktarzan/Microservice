@@ -19,12 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Force JSON for all requests globally (API-only service)
-        $middleware->append(ForceJsonResponse::class);
-
         $middleware->api(prepend: [
             EnsureFrontendRequestsAreStateful::class,
         ]);
+
+        // Force JSON for all requests globally (API-only service)
+        $middleware->append(ForceJsonResponse::class);
 
         $middleware->alias([
             'verified' => EnsureEmailIsVerified::class,

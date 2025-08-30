@@ -31,14 +31,7 @@ trait ApiResponse
             return false;
         }
 
-        if ($shouldLog) {
-            return true;
-        }
-
-        /** @var array<string, bool> $logTypes */
-        $logTypes = (array) config('api.log_responses_per_type', []);
-
-        return $logTypes[$responseType] ?? $shouldLog;
+        return $shouldLog;
     }
 
     /**

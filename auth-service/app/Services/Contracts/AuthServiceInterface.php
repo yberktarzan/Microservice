@@ -53,7 +53,7 @@ interface AuthServiceInterface
      *
      * @param  string  $email  User email
      *
-     * @throws \Exception When email sending fails
+     * @throws \Illuminate\Validation\ValidationException When email sending fails
      */
     public function sendPasswordResetLink(string $email): void;
 
@@ -62,7 +62,7 @@ interface AuthServiceInterface
      *
      * @param  array<string, mixed>  $data  Password reset data (token, email, password, password_confirmation)
      *
-     * @throws \Exception When reset fails
+     * @throws \Illuminate\Validation\ValidationException When reset fails
      */
     public function resetPassword(array $data): void;
 
@@ -73,7 +73,7 @@ interface AuthServiceInterface
      * @param  string  $hash  Verification hash
      * @return array<string, mixed> Verification result
      *
-     * @throws \Exception When verification fails
+     * @throws \Illuminate\Validation\ValidationException When verification fails
      */
     public function verifyEmail(int $userId, string $hash): array;
 
@@ -82,8 +82,6 @@ interface AuthServiceInterface
      *
      * @param  User  $user  Authenticated user
      * @return array<string, mixed> Resend result
-     *
-     * @throws \Exception When sending fails
      */
     public function resendEmailVerification(User $user): array;
 }

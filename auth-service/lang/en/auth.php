@@ -15,6 +15,7 @@ return [
     // Login messages
     'login_successful' => 'Login successful.',
     'login_failed' => 'Invalid credentials provided.',
+    'invalid_credentials' => 'Invalid credentials provided.',
     'logout_successful' => 'Logged out successfully.',
 
     // Token messages
@@ -34,6 +35,7 @@ return [
     'email_verification_sent' => 'Verification email sent.',
     'email_verification_failed' => 'Unable to send verification email.',
     'email_verification_invalid' => 'Invalid verification link.',
+    'email_not_verified' => 'Email address not verified.',
 
     // Account status
     'account_disabled' => 'Account has been disabled.',

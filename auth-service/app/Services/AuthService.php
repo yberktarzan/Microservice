@@ -8,6 +8,7 @@ use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Exceptions\Auth\EmailNotVerifiedException;
 use App\Exceptions\Auth\InvalidCredentialsException;
 use App\Exceptions\Auth\UserAlreadyExistsException;
+use App\Models\User;
 use App\Services\Contracts\AuthServiceInterface;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
@@ -100,7 +101,7 @@ class AuthService implements AuthServiceInterface
     /**
      * Logout user.
      */
-    public function logout(\App\Models\User $user): void
+    public function logout(User $user): void
     {
         $user->tokens()->delete();
     }
@@ -110,7 +111,7 @@ class AuthService implements AuthServiceInterface
      *
      * @return array New token data
      */
-    public function refreshToken(\App\Models\User $user): array
+    public function refreshToken(User $user): array
     {
         // Revoke current token
         $user->tokens()->delete();
@@ -180,25 +181,33 @@ class AuthService implements AuthServiceInterface
      * @param  int  $userId  User ID
      * @param  string  $hash  Verification hash
      * @return array Verification result
+     * 
+     * @throws ValidationException
      */
     public function verifyEmail(int $userId, string $hash): array
     {
         $user = $this->userRepository->findById($userId);
 
         if (! $user) {
-            throw new ValidationException('User not found');
+            throw ValidationException::withMessages([
+                'user' => ['User not found'],
+            ]);
         }
 
         if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
-            throw new ValidationException('Invalid verification hash');
+            throw ValidationException::withMessages([
+                'hash' => ['Invalid verification hash'],
+            ]);
         }
 
-        if (! $user->hasVerifiedEmail()) {
+        $alreadyVerified = $user->hasVerifiedEmail();
+
+        if (! $alreadyVerified) {
             $user->markEmailAsVerified();
             event(new Verified($user));
         }
 
-        return ['message' => 'Email verified successfully'];
+        return ['already_verified' => $alreadyVerified];
     }
 
     /**
@@ -206,14 +215,14 @@ class AuthService implements AuthServiceInterface
      *
      * @return array Resend result
      */
-    public function resendEmailVerification(\App\Models\User $user): array
+    public function resendEmailVerification(User $user): array
     {
-        if ($user->hasVerifiedEmail()) {
-            return ['message' => 'Email is already verified'];
+        $alreadyVerified = $user->hasVerifiedEmail();
+
+        if (! $alreadyVerified) {
+            $user->sendEmailVerificationNotification();
         }
 
-        $user->sendEmailVerificationNotification();
-
-        return ['message' => 'Verification email sent successfully'];
+        return ['already_verified' => $alreadyVerified];
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -63,7 +64,7 @@ class Handler extends ExceptionHandler
                 'success' => false,
                 'message' => __('response.error.validation'),
                 'errors' => $e->errors(),
-            ], 422);
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         // Handle custom auth exceptions
@@ -72,7 +73,7 @@ class Handler extends ExceptionHandler
                 'success' => false,
                 'message' => __('auth.user_already_exists'),
                 'error_code' => 'USER_EXISTS',
-            ], 409);
+            ], Response::HTTP_CONFLICT);
         }
 
         if ($e instanceof InvalidCredentialsException) {
@@ -80,7 +81,7 @@ class Handler extends ExceptionHandler
                 'success' => false,
                 'message' => __('auth.invalid_credentials'),
                 'error_code' => 'INVALID_CREDENTIALS',
-            ], 401);
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         if ($e instanceof EmailNotVerifiedException) {
@@ -88,7 +89,7 @@ class Handler extends ExceptionHandler
                 'success' => false,
                 'message' => __('auth.email_not_verified'),
                 'error_code' => 'EMAIL_NOT_VERIFIED',
-            ], 403);
+            ], Response::HTTP_FORBIDDEN);
         }
 
         // Handle 404 Not Found
@@ -97,7 +98,7 @@ class Handler extends ExceptionHandler
                 'success' => false,
                 'message' => __('response.error.not_found'),
                 'error_code' => 'NOT_FOUND',
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
 
         // Handle 405 Method Not Allowed
@@ -106,7 +107,7 @@ class Handler extends ExceptionHandler
                 'success' => false,
                 'message' => 'Method not allowed',
                 'error_code' => 'METHOD_NOT_ALLOWED',
-            ], 405);
+            ], Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
         // Handle other exceptions
@@ -130,6 +131,6 @@ class Handler extends ExceptionHandler
             return $e->getStatusCode();
         }
 
-        return 500;
+        return Response::HTTP_INTERNAL_SERVER_ERROR;
     }
 }

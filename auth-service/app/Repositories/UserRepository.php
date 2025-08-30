@@ -69,38 +69,7 @@ final class UserRepository implements UserRepositoryInterface
         return User::where('id', $id)->update($data);
     }
 
-    /**
-     * Delete user.
-     *
-     * @param  User  $user  User model
-     * @return bool Deletion success
-     */
-    public function delete(User $user): bool
-    {
-        return $user->delete();
-    }
 
-    /**
-     * Find user by verification token.
-     *
-     * @param  string  $token  Verification token
-     * @return User|null User model or null if not found
-     */
-    public function findByVerificationToken(string $token): ?User
-    {
-        return User::where('email_verification_token', $token)->first();
-    }
-
-    /**
-     * Find user by reset token.
-     *
-     * @param  string  $token  Reset token
-     * @return User|null User model or null if not found
-     */
-    public function findByResetToken(string $token): ?User
-    {
-        return User::where('password_reset_token', $token)->first();
-    }
 
     /**
      * Check if user exists by email.
