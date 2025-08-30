@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,5 +23,3 @@ Route::get('/', function () {
         'timestamp' => now()->toISOString(),
     ]);
 });
-
-Route::get('health', HealthCheckResultsController::class);

@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Spatie\Health\Http\Controllers\HealthCheckJsonResultsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +15,6 @@ use Spatie\Health\Http\Controllers\HealthCheckJsonResultsController;
 |
 */
 
-// Health check endpoints
 Route::get('/health', function () {
     return response()->json([
         'service' => 'Auth Service',
@@ -24,9 +22,6 @@ Route::get('/health', function () {
         'timestamp' => now()->toISOString(),
     ]);
 });
-
-// Detailed health check with JSON results
-Route::get('/health/detailed', HealthCheckJsonResultsController::class);
 
 // Authentication routes with locale middleware
 Route::middleware(['locale'])->group(function () {
