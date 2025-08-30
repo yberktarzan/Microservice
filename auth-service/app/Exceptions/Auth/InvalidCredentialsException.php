@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Exceptions\Auth;
 
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Invalid credentials exception.
@@ -18,7 +19,7 @@ class InvalidCredentialsException extends AuthException
      */
     public function __construct()
     {
-        parent::__construct(__('auth.login_failed'), 401);
+        parent::__construct(__('auth.login_failed'), Response::HTTP_UNAUTHORIZED);
     }
 
     /**

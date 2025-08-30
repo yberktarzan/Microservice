@@ -48,7 +48,6 @@ class ApiResponseLogger
      *     errors?: array<string, mixed>,
      *     data?: mixed
      * } $responseData
-     *
      * @return array<string, mixed>
      */
     private function buildLogContext(array $responseData): array
@@ -102,7 +101,7 @@ class ApiResponseLogger
             }
         }
 
-        if (!$responseData['success'] && !empty($responseData['errors'])) {
+        if (! $responseData['success'] && ! empty($responseData['errors'])) {
             $context['errors'] = $responseData['errors'];
         }
 
@@ -119,7 +118,7 @@ class ApiResponseLogger
     /**
      * Log successful API responses.
      *
-     * @param array<string, mixed> $context
+     * @param  array<string, mixed>  $context
      */
     private function logSuccessResponse(array $context): void
     {
@@ -129,7 +128,7 @@ class ApiResponseLogger
     /**
      * Log error responses with appropriate log levels based on status code.
      *
-     * @param array<string, mixed> $context
+     * @param  array<string, mixed>  $context
      */
     private function logErrorResponse(int $statusCode, array $context): void
     {
@@ -138,6 +137,7 @@ class ApiResponseLogger
         match (true) {
             $statusCode >= 500 => Log::error($logMessage, $context),
             in_array($statusCode, [Response::HTTP_UNAUTHORIZED, Response::HTTP_FORBIDDEN]) => Log::warning($logMessage, $context),
+            in_array($statusCode, [Response::HTTP_UNPROCESSABLE_ENTITY]) => Log::warning($logMessage, $context),
             $statusCode >= 400 => Log::info($logMessage, $context),
             default => Log::warning('API Unknown Error Response', $context),
         };

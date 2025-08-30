@@ -6,6 +6,7 @@ namespace App\Exceptions\Auth;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Authentication exception.
@@ -17,10 +18,10 @@ class AuthException extends Exception
     /**
      * Create a new authentication exception instance.
      *
-     * @param string $message Exception message
-     * @param int $code HTTP status code
+     * @param  string  $message  Exception message
+     * @param  int  $code  HTTP status code
      */
-    public function __construct(string $message = 'Authentication failed', int $code = 401)
+    public function __construct(string $message = 'Authentication failed', int $code = Response::HTTP_UNAUTHORIZED)
     {
         parent::__construct($message, $code);
     }

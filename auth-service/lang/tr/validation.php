@@ -16,7 +16,7 @@ return [
     'string' => ':attribute bir metin olmalıdır.',
     'integer' => ':attribute bir sayı olmalıdır.',
     'exists' => 'Seçilen :attribute geçersiz.',
-    
+
     'attributes' => [
         'name' => 'ad',
         'email' => 'e-posta adresi',

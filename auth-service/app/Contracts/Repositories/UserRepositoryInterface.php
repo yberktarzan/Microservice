@@ -17,7 +17,7 @@ interface UserRepositoryInterface
     /**
      * Find user by ID.
      *
-     * @param int $id User ID
+     * @param  int  $id  User ID
      * @return User|null User model or null if not found
      */
     public function findById(int $id): ?User;
@@ -25,7 +25,7 @@ interface UserRepositoryInterface
     /**
      * Find user by email address.
      *
-     * @param string $email Email address
+     * @param  string  $email  Email address
      * @return User|null User model or null if not found
      */
     public function findByEmail(string $email): ?User;
@@ -33,7 +33,7 @@ interface UserRepositoryInterface
     /**
      * Create a new user during registration.
      *
-     * @param array<string, mixed> $data User registration data
+     * @param  array<string, mixed>  $data  User registration data
      * @return User Created user model
      */
     public function create(array $data): User;
@@ -41,8 +41,8 @@ interface UserRepositoryInterface
     /**
      * Update user profile data.
      *
-     * @param int $id User ID
-     * @param array<string, mixed> $data Updated profile data
+     * @param  int  $id  User ID
+     * @param  array<string, mixed>  $data  Updated profile data
      * @return bool Update success status
      */
     public function update(int $id, array $data): bool;
@@ -50,7 +50,7 @@ interface UserRepositoryInterface
     /**
      * Check if user exists by email.
      *
-     * @param string $email Email address
+     * @param  string  $email  Email address
      * @return bool Existence status
      */
     public function existsByEmail(string $email): bool;
@@ -58,7 +58,7 @@ interface UserRepositoryInterface
     /**
      * Mark email as verified.
      *
-     * @param int $id User ID
+     * @param  int  $id  User ID
      * @return bool Update success status
      */
     public function markEmailAsVerified(int $id): bool;
@@ -66,8 +66,8 @@ interface UserRepositoryInterface
     /**
      * Update user password.
      *
-     * @param int $id User ID
-     * @param string $hashedPassword Hashed password
+     * @param  int  $id  User ID
+     * @param  string  $hashedPassword  Hashed password
      * @return bool Update success status
      */
     public function updatePassword(int $id, string $hashedPassword): bool;

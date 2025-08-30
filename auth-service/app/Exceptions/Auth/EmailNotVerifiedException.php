@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Exceptions\Auth;
 
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Email not verified exception.
@@ -18,7 +19,7 @@ class EmailNotVerifiedException extends AuthException
      */
     public function __construct()
     {
-        parent::__construct(__('auth.account_not_verified'), 403);
+        parent::__construct(__('auth.account_not_verified'), Response::HTTP_FORBIDDEN);
     }
 
     /**

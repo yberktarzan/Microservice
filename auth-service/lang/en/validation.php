@@ -16,7 +16,7 @@ return [
     'string' => 'The :attribute must be a string.',
     'integer' => 'The :attribute must be an integer.',
     'exists' => 'The selected :attribute is invalid.',
-    
+
     'attributes' => [
         'name' => 'name',
         'email' => 'email address',

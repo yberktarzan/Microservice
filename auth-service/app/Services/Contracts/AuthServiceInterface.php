@@ -17,17 +17,18 @@ interface AuthServiceInterface
     /**
      * Register a new user.
      *
-     * @param array<string, mixed> $data Registration data
-     * @return array<string, mixed> User and token data
+     * @param  array{name: string, email: string, password: string}  $data  Registration data
+     * @return array{user: User, token: string} User and token data
      */
     public function register(array $data): array;
 
     /**
      * Login user with email and password.
      *
-     * @param string $email User email
-     * @param string $password User password
-     * @return array<string, mixed> User and token data
+     * @param  string  $email  User email
+     * @param  string  $password  User password
+     * @return array{user: User, token: string} User and token data
+     *
      * @throws \App\Exceptions\Auth\InvalidCredentialsException
      */
     public function login(string $email, string $password): array;
@@ -35,53 +36,52 @@ interface AuthServiceInterface
     /**
      * Logout user and revoke current token.
      *
-     * @param User $user Authenticated user
-     * @return void
+     * @param  User  $user  Authenticated user
      */
     public function logout(User $user): void;
 
     /**
      * Refresh user authentication token.
      *
-     * @param User $user Authenticated user
-     * @return array<string, mixed> User and new token data
+     * @param  User  $user  Authenticated user
+     * @return array{token: string} User and new token data
      */
     public function refreshToken(User $user): array;
 
     /**
      * Send password reset link to user email.
      *
-     * @param string $email User email
-     * @return void
-     * @throws \Exception When email sending fails
+     * @param  string  $email  User email
+     *
+     * @throws \Illuminate\Validation\ValidationException When email sending fails
      */
     public function sendPasswordResetLink(string $email): void;
 
     /**
      * Reset user password using reset token.
      *
-     * @param array<string, mixed> $data Password reset data (token, email, password, password_confirmation)
-     * @return void
-     * @throws \Exception When reset fails
+     * @param  array{token: string, email: string, password: string, password_confirmation: string}  $data  Password reset data (token, email, password, password_confirmation)
+     *
+     * @throws \Illuminate\Validation\ValidationException When reset fails
      */
     public function resetPassword(array $data): void;
 
     /**
      * Verify user email address.
      *
-     * @param int $userId User ID
-     * @param string $hash Verification hash
-     * @return array<string, mixed> Verification result
-     * @throws \Exception When verification fails
+     * @param  int  $userId  User ID
+     * @param  string  $hash  Verification hash
+     * @return array{already_verified: bool} Verification result
+     *
+     * @throws \Illuminate\Validation\ValidationException When verification fails
      */
     public function verifyEmail(int $userId, string $hash): array;
 
     /**
      * Resend email verification notification.
      *
-     * @param User $user Authenticated user
-     * @return array<string, mixed> Resend result
-     * @throws \Exception When sending fails
+     * @param  User  $user  Authenticated user
+     * @return array{already_verified: bool} Resend result
      */
     public function resendEmailVerification(User $user): array;
 }

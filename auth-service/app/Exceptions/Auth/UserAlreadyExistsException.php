@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace App\Exceptions\Auth;
 
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Token expired exception.
+ * User already exists exception.
  *
- * Thrown when authentication token has expired.
+ * Thrown when attempting to register a user that already exists.
  */
-class TokenExpiredException extends AuthException
+class UserAlreadyExistsException extends AuthException
 {
     /**
-     * Create a new token expired exception instance.
+     * Create a new user already exists exception instance.
      */
     public function __construct()
     {
-        parent::__construct(__('auth.token_expired'), 401);
+        parent::__construct(__('auth.user_already_exists'), Response::HTTP_CONFLICT);
     }
 
     /**
@@ -29,7 +30,7 @@ class TokenExpiredException extends AuthException
         return response()->json([
             'success' => false,
             'message' => $this->getMessage(),
-            'error_code' => 'TOKEN_EXPIRED',
+            'error_code' => 'USER_EXISTS',
         ], $this->getCode());
     }
 }
